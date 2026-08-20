@@ -1,0 +1,722 @@
+/* ==========================================================================
+   Galewings Pvt Ltd. styles.css
+   Direction: instrumentation, not marketing. Graphite ground, hairline rules,
+   numbered sections, one signal-amber accent. Mobile-first.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Dark surfaces. Contrast ratios are against --c-ink */
+  --c-ink:       #0E1113;   /* page ground                       */
+  --c-surface:   #161A1D;   /* alternating band                  */
+  --c-surface-2: #1E2429;   /* cards, panels                     */
+  --c-line:      #2A3238;   /* hairline                          */
+  --c-text:      #E8EDF0;   /* body            15.1:1            */
+  --c-muted:     #97A3AC;   /* secondary        7.4:1            */
+  --c-amber:     #E8A33D;   /* accent           8.9:1            */
+  --c-amber-hi:  #F2B457;   /* hover                             */
+  --c-on-amber:  #0E1113;   /* text on amber    8.9:1            */
+
+  /* Light "steel" band. Ratios against --c-steel-bg */
+  --c-steel-bg:    #EEF1F3;
+  --c-steel-text:  #14181B; /* 15.4:1 */
+  --c-steel-muted: #4A555D; /*  7.4:1 */
+  --c-steel-line:  #CFD6DB;
+  --c-amber-dark:  #8A5A00; /*  5.6:1. amber for TEXT on light only */
+
+  /* Type */
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body:    "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  --step--2: 0.75rem;
+  --step--1: 0.875rem;
+  --step-0:  1.0625rem;                          /* 17px body */
+  --step-1:  clamp(1.125rem, 0.4vw + 1.03rem, 1.3125rem);
+  --step-2:  clamp(1.375rem, 1vw + 1.15rem, 1.75rem);
+  --step-3:  clamp(1.75rem, 2.2vw + 1.25rem, 2.5rem);
+  --step-4:  clamp(2.125rem, 3.6vw + 1.3rem, 3.5rem);
+  --step-5:  clamp(2.75rem, 6vw + 1.2rem, 5.25rem);
+
+  /* Space */
+  --sp-1: 0.25rem; --sp-2: 0.5rem;  --sp-3: 0.75rem; --sp-4: 1rem;
+  --sp-5: 1.5rem;  --sp-6: 2rem;    --sp-7: 3rem;    --sp-8: 4rem;
+
+  --section-y: clamp(4rem, 9vw, 7.5rem);
+  --gutter:    1.25rem;
+  --measure:   68ch;
+
+  /* Shape */
+  --radius:    10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 18px 46px rgba(0, 0, 0, 0.55);
+
+  --header-h: 62px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-ink);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0 0 var(--sp-4); max-width: var(--measure); }
+p:last-child { margin-bottom: 0; }
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+
+a { color: var(--c-amber); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--c-amber-hi); }
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+/* Focus. One visible ring everywhere, never removed */
+:focus-visible {
+  outline: 2px solid var(--c-amber);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.section-steel :focus-visible { outline-color: var(--c-amber-dark); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; top: 0; left: var(--gutter);
+  transform: translateY(-120%);
+  z-index: 200;
+  background: var(--c-amber); color: var(--c-on-amber);
+  font-weight: 600; font-size: var(--step--1);
+  padding: 0.65rem 1.1rem; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+.skip-link:focus { transform: translateY(0); color: var(--c-on-amber); }
+
+/* --------------------------------------------------------------------------
+   3. Layout primitives
+   -------------------------------------------------------------------------- */
+.container {
+  width: min(100% - (var(--gutter) * 2), 74rem);
+  margin-inline: auto;
+}
+
+.section { padding-block: var(--section-y); }
+.section-surface { background: var(--c-surface); }
+
+.eyebrow {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: var(--sp-4);
+}
+.eyebrow-num {
+  color: var(--c-amber);
+  font-variant-numeric: tabular-nums;
+}
+.eyebrow-num::after {
+  content: "";
+  display: inline-block;
+  width: 1.75rem; height: 1px;
+  margin-left: 0.6rem; margin-bottom: 0.28em;
+  background: var(--c-amber);
+  vertical-align: middle;
+}
+
+.section-title {
+  font-size: var(--step-3);
+  max-width: 22ch;
+  margin-bottom: var(--sp-5);
+}
+.section-lead {
+  font-size: var(--step-1);
+  color: var(--c-muted);
+  max-width: 62ch;
+}
+.section-outcome {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--c-line);
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--c-text);
+  max-width: 48ch;
+}
+
+/* --------------------------------------------------------------------------
+   4. Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease,
+              color 0.16s ease, transform 0.16s ease;
+}
+.btn-primary { background: var(--c-amber); color: var(--c-on-amber); }
+.btn-primary:hover { background: var(--c-amber-hi); color: var(--c-on-amber); transform: translateY(-1px); }
+
+.btn-ghost { background: transparent; color: var(--c-text); border-color: var(--c-line); }
+.btn-ghost:hover { color: var(--c-amber); border-color: var(--c-amber); }
+
+.btn-sm { min-height: 40px; padding: 0.45rem 0.95rem; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-6); }
+
+/* --------------------------------------------------------------------------
+   5. Header & navigation
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(14, 17, 19, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.header-inner {
+  display: flex; align-items: center; gap: var(--sp-4);
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  margin-right: auto;
+  color: var(--c-amber);
+  text-decoration: none;
+}
+/* The real logo mark is navy and blue on white and reads correctly only on a
+   light ground, so it sits on a small off-white chip wherever the surrounding
+   surface is dark. */
+.brand-icon-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 30px; padding-inline: 6px;
+  background: #F5F2EC;
+  border-radius: 6px;
+  flex: none;
+}
+.brand-icon-chip img { display: block; height: 20px; width: auto; }
+
+.brand-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
+  color: var(--c-text);
+}
+.brand:hover .brand-word { color: var(--c-amber); }
+
+.nav-toggle {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  min-height: 44px; padding: 0.4rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-sm);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  font-size: var(--step--1); font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer;
+}
+.nav-toggle:hover { border-color: var(--c-amber); color: var(--c-amber); }
+
+.nav-toggle-bars { display: grid; gap: 4px; width: 18px; }
+.nav-toggle-bars span {
+  display: block; height: 2px; width: 100%;
+  background: currentColor; border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* No-JS: the toggle is useless, so hide it and leave the nav visible */
+.nav-toggle { display: none; }
+.js .nav-toggle { display: inline-flex; }
+
+.site-nav { display: block; }
+.js .site-nav {
+  display: none;
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--c-ink);
+  border-bottom: 1px solid var(--c-line);
+  box-shadow: var(--shadow-md);
+  padding: var(--sp-4) var(--gutter) var(--sp-5);
+}
+.js .site-nav.is-open { display: block; }
+
+.nav-list { display: grid; }
+.nav-list a {
+  display: block;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--c-line);
+  color: var(--c-text);
+  font-size: var(--step-0);
+  font-weight: 500;
+  text-decoration: none;
+}
+.nav-list a:hover { color: var(--c-amber); }
+.nav-cta { margin-top: var(--sp-4); width: 100%; }
+
+@media (min-width: 56rem) {
+  .nav-toggle, .js .nav-toggle { display: none; }
+  .site-nav, .js .site-nav {
+    display: flex; align-items: center; gap: var(--sp-5);
+    position: static; padding: 0; background: none;
+    border: 0; box-shadow: none;
+  }
+  .nav-list { display: flex; gap: var(--sp-5); }
+  .nav-list a {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid transparent;
+    font-size: var(--step--1);
+    color: var(--c-muted);
+  }
+  .nav-list a:hover { color: var(--c-text); border-bottom-color: var(--c-amber); }
+  .nav-cta { margin-top: 0; width: auto; }
+}
+
+/* --------------------------------------------------------------------------
+   6. Hero
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding-block: clamp(3rem, 7vw, 5.5rem) clamp(3.5rem, 8vw, 6.5rem);
+  border-bottom: 1px solid var(--c-line);
+  overflow: hidden;
+}
+
+.hero-inner { display: grid; gap: clamp(2.5rem, 6vw, 4rem); }
+
+.wordmark { margin-bottom: var(--sp-5); }
+.wordmark-name {
+  display: block;
+  font-size: var(--step-5);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+.wordmark-tagline {
+  display: block;
+  margin-top: 0.35em;
+  font-size: var(--step-2);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--c-amber);
+}
+
+.hero-support {
+  font-size: var(--step-1);
+  color: var(--c-muted);
+  max-width: 54ch;
+}
+
+.hero-figure { position: relative; margin: 0; }
+.hero-figure img {
+  position: relative;
+  width: 100%;
+  max-width: 600px;          /* native is 575px wide. Never upscale hard */
+  margin-inline: auto;
+  filter: drop-shadow(0 24px 34px rgba(0, 0, 0, 0.62));
+}
+.hero-figure figcaption {
+  position: relative;
+  margin-top: var(--sp-4);
+  max-width: 46ch;
+  margin-inline: auto;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--c-muted);
+  text-align: center;
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--sp-3);
+}
+
+.hero-glow {
+  position: absolute;
+  left: 50%; top: 38%;
+  width: min(140%, 46rem); aspect-ratio: 1 / 0.62;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center,
+              rgba(232, 163, 61, 0.20) 0%,
+              rgba(232, 163, 61, 0.07) 42%,
+              rgba(232, 163, 61, 0) 70%);
+  pointer-events: none;
+}
+
+@media (min-width: 64rem) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+    align-items: center;
+  }
+  .hero-figure figcaption { text-align: left; margin-inline: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   7. Problem
+   -------------------------------------------------------------------------- */
+.split { display: grid; gap: var(--sp-5); margin-top: var(--sp-6); }
+
+.panel {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-line);
+  border-top: 2px solid var(--c-amber);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+}
+.panel-title {
+  font-size: var(--step-2);
+  margin-bottom: var(--sp-4);
+}
+.panel p { color: var(--c-muted); }
+
+.stat {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--c-line);
+}
+.stat-figure {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--c-amber);
+  margin-bottom: var(--sp-3);
+}
+.stat-label { font-size: var(--step--1); color: var(--c-muted); }
+
+@media (min-width: 48rem) {
+  .split { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-6); }
+}
+
+/* --------------------------------------------------------------------------
+   8. Solution
+   -------------------------------------------------------------------------- */
+.solution-grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  margin-top: var(--sp-7);
+  align-items: center;
+}
+
+.stack-list { counter-reset: stack; display: grid; gap: var(--sp-5); }
+.stack-list li {
+  counter-increment: stack;
+  position: relative;
+  padding-left: 3.1rem;
+}
+.stack-list li::before {
+  content: counter(stack, decimal-leading-zero);
+  position: absolute; left: 0; top: 0.1rem;
+  display: grid; place-items: center;
+  width: 2.1rem; height: 2.1rem;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--c-amber);
+}
+.stack-list h3 { font-size: var(--step-1); margin-bottom: 0.3rem; }
+.stack-list p { color: var(--c-muted); font-size: var(--step--1); }
+
+.diagram-figure { margin: 0; }
+.diagram { width: 100%; height: auto; }
+
+.dg-line   { stroke: var(--c-amber); stroke-width: 1.5; opacity: 0.85; }
+.dg-node   { fill: var(--c-surface-2); stroke: var(--c-line); stroke-width: 1; }
+.dg-hub    { fill: none; stroke: var(--c-amber); stroke-width: 1.5; }
+
+.dg-label text,
+.dg-hub-label text {
+  font-family: var(--font-body);
+  text-anchor: middle;
+  letter-spacing: 0.14em;
+}
+.dg-label text {
+  fill: var(--c-text);
+  font-size: 17px;
+  font-weight: 600;
+}
+.dg-hub-label text {
+  fill: var(--c-amber);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.diagram-figure figcaption {
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--c-muted);
+  max-width: 46ch;
+}
+
+/* The SVG scales with its container, so its type shrinks with it. Below the
+   two-column breakpoint the diagram is only ~335px wide. Bump the in-SVG
+   sizes so the labels stay readable rather than decorative. */
+@media (max-width: 47.99rem) {
+  .dg-label text     { font-size: 25px; letter-spacing: 0.1em; }
+  .dg-hub-label text { font-size: 22px; letter-spacing: 0.08em; }
+}
+
+@media (min-width: 60rem) {
+  .solution-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
+}
+
+/* --------------------------------------------------------------------------
+   9. Technology. The one light band
+   -------------------------------------------------------------------------- */
+.section-steel {
+  background: var(--c-steel-bg);
+  color: var(--c-steel-text);
+}
+.section-steel .eyebrow      { color: var(--c-steel-muted); }
+.section-steel .eyebrow-num  { color: var(--c-amber-dark); }
+.section-steel .eyebrow-num::after { background: var(--c-amber-dark); }
+.section-steel .section-lead { color: var(--c-steel-muted); }
+
+.claim {
+  margin-block: var(--sp-6);
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+  background: #fff;
+  border: 1px solid var(--c-steel-line);
+  border-left: 3px solid var(--c-amber);
+  border-radius: var(--radius);
+}
+.claim-text {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--c-steel-text);
+  max-width: 40ch;
+}
+.footnote {
+  margin-top: var(--sp-4);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--c-steel-muted);
+  max-width: 58ch;
+}
+
+.capabilities {
+  display: grid;
+  gap: 0;
+  margin: var(--sp-7) 0 0;
+  border-top: 1px solid var(--c-steel-line);
+}
+.capability {
+  display: grid;
+  gap: var(--sp-1);
+  padding-block: var(--sp-5);
+  border-bottom: 1px solid var(--c-steel-line);
+}
+.capability dt {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.capability dd { margin: 0; color: var(--c-steel-muted); }
+
+@media (min-width: 48rem) {
+  .capability {
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: var(--sp-5);
+    align-items: baseline;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. Why Galewings
+   -------------------------------------------------------------------------- */
+.cards {
+  display: grid;
+  gap: var(--sp-4);
+  margin-top: var(--sp-6);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+.card {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  padding: var(--sp-5);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.card:hover { border-color: var(--c-amber); transform: translateY(-2px); }
+.card h3 {
+  font-size: var(--step-1);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--c-line);
+}
+.card p { font-size: var(--step--1); color: var(--c-muted); }
+
+/* --------------------------------------------------------------------------
+   11. Contact
+   -------------------------------------------------------------------------- */
+.section-contact { border-top: 1px solid var(--c-line); }
+
+.mail-link {
+  display: inline-block;
+  margin-top: var(--sp-6);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5.2vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--c-amber);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  overflow-wrap: anywhere;
+  transition: color 0.16s ease, border-color 0.16s ease;
+}
+.mail-link:hover { color: var(--c-amber-hi); border-bottom-color: var(--c-amber-hi); }
+
+.contact-links {
+  display: flex; flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-6);
+  margin-top: var(--sp-6);
+}
+
+.icon-link {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  min-height: 44px;
+  color: var(--c-muted);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-decoration: none;
+}
+.icon-link:hover { color: var(--c-amber); }
+.icon-link .icon { width: 20px; height: 20px; flex: none; }
+.icon-link span { border-bottom: 1px solid var(--c-line); }
+.icon-link:hover span { border-bottom-color: currentColor; }
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  background: #0A0C0E;
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--sp-8);
+  font-size: var(--step--1);
+}
+
+.footer-inner { display: grid; gap: var(--sp-6); }
+
+.footer-brand { display: flex; align-items: center; gap: 0.6rem; }
+.footer-icon-chip { height: 26px; padding-inline: 5px; }
+.footer-icon-chip img { height: 17px; }
+.footer-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.footer-heading {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: var(--sp-3);
+}
+.footer-col address { font-style: normal; color: var(--c-muted); line-height: 1.7; }
+.footer-col p { margin-bottom: var(--sp-2); }
+
+.footer-base {
+  margin-top: var(--sp-7);
+  padding-block: var(--sp-5);
+  border-top: 1px solid var(--c-line);
+  color: var(--c-muted);
+  font-size: var(--step--2);
+}
+.footer-base p { margin: 0; }
+
+/* Two columns first. Three across at 768px squeezes the address into an
+   awkward wrap, so the third column waits for real room. */
+@media (min-width: 34rem) {
+  .footer-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (min-width: 56rem) {
+  .footer-inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--sp-6);
+    align-items: start;
+  }
+  .footer-brand { grid-column: auto; }
+}
+
+/* --------------------------------------------------------------------------
+   13. Motion. Opt-in, and only when the user allows it
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .js .reveal.is-visible { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
